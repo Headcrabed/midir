@@ -1,12 +1,16 @@
 use std::error::Error;
-use std::sync::{Arc, Mutex};
-use std::thread;
-use std::time::Duration;
 
-use midir::{MidiInput, MidiOutput, PortEvent, PortWatcher};
+#[cfg(unix)]
+use std::sync::{Arc, Mutex};
+#[cfg(unix)]
+use std::thread;
+#[cfg(unix)]
+use std::time::Duration;
 
 #[cfg(unix)]
 use midir::os::unix::{VirtualInput, VirtualOutput};
+#[cfg(unix)]
+use midir::{MidiInput, MidiOutput, PortEvent, PortWatcher};
 
 fn main() {
     match run() {

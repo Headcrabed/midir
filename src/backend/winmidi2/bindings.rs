@@ -2523,6 +2523,44 @@ pub mod Windows {
                             -> windows_core::HRESULT,
                     }
                     windows_core::imp::define_interface!(
+                        IMidiLegacyPortDeviceInformationAddedEventArgs,
+                        IMidiLegacyPortDeviceInformationAddedEventArgs_Vtbl,
+                        0x8087b303_0519_c0de_31d1_dd004001b000
+                    );
+                    impl windows_core::RuntimeType for IMidiLegacyPortDeviceInformationAddedEventArgs {
+                        const SIGNATURE: windows_core::imp::ConstBuffer =
+                            windows_core::imp::ConstBuffer::for_interface::<Self>();
+                    }
+                    #[repr(C)]
+                    #[doc(hidden)]
+                    pub struct IMidiLegacyPortDeviceInformationAddedEventArgs_Vtbl {
+                        pub base__: windows_core::IInspectable_Vtbl,
+                        pub AddedDevice: unsafe extern "system" fn(
+                            *mut core::ffi::c_void,
+                            *mut *mut core::ffi::c_void,
+                        )
+                            -> windows_core::HRESULT,
+                    }
+                    windows_core::imp::define_interface!(
+                        IMidiLegacyPortDeviceInformationRemovedEventArgs,
+                        IMidiLegacyPortDeviceInformationRemovedEventArgs_Vtbl,
+                        0x8087b303_0519_c0de_31d1_dd004001c000
+                    );
+                    impl windows_core::RuntimeType for IMidiLegacyPortDeviceInformationRemovedEventArgs {
+                        const SIGNATURE: windows_core::imp::ConstBuffer =
+                            windows_core::imp::ConstBuffer::for_interface::<Self>();
+                    }
+                    #[repr(C)]
+                    #[doc(hidden)]
+                    pub struct IMidiLegacyPortDeviceInformationRemovedEventArgs_Vtbl {
+                        pub base__: windows_core::IInspectable_Vtbl,
+                        pub RemovedDevice: unsafe extern "system" fn(
+                            *mut core::ffi::c_void,
+                            *mut *mut core::ffi::c_void,
+                        )
+                            -> windows_core::HRESULT,
+                    }
+                    windows_core::imp::define_interface!(
                         IMidiLegacyPortDeviceInformationStatics,
                         IMidiLegacyPortDeviceInformationStatics_Vtbl,
                         0x8087b303_0519_c0de_31d1_ee004001a000
@@ -2626,7 +2664,12 @@ pub mod Windows {
                         )
                             -> windows_core::HRESULT,
                         Status: usize,
-                        Added: usize,
+                        pub Added: unsafe extern "system" fn(
+                            *mut core::ffi::c_void,
+                            *mut core::ffi::c_void,
+                            *mut i64,
+                        )
+                            -> windows_core::HRESULT,
                         pub RemoveAdded: unsafe extern "system" fn(
                             *mut core::ffi::c_void,
                             i64,
@@ -2638,7 +2681,12 @@ pub mod Windows {
                             i64,
                         )
                             -> windows_core::HRESULT,
-                        Removed: usize,
+                        pub Removed: unsafe extern "system" fn(
+                            *mut core::ffi::c_void,
+                            *mut core::ffi::c_void,
+                            *mut i64,
+                        )
+                            -> windows_core::HRESULT,
                         pub RemoveRemoved: unsafe extern "system" fn(
                             *mut core::ffi::c_void,
                             i64,
@@ -3202,6 +3250,87 @@ pub mod Windows {
                     unsafe impl Sync for MidiLegacyPortDeviceInformation {}
                     #[repr(transparent)]
                     #[derive(Clone, Debug, Eq, PartialEq)]
+                    pub struct MidiLegacyPortDeviceInformationAddedEventArgs(
+                        windows_core::IUnknown,
+                    );
+                    windows_core::imp::interface_hierarchy!(
+                        MidiLegacyPortDeviceInformationAddedEventArgs,
+                        windows_core::IUnknown,
+                        windows_core::IInspectable
+                    );
+                    impl MidiLegacyPortDeviceInformationAddedEventArgs {
+                        pub fn AddedDevice(&self) -> Option<MidiLegacyPortDeviceInformation> {
+                            let this = self;
+                            unsafe {
+                                let mut result__ = core::mem::zeroed();
+                                let hresult__ = (windows_core::Interface::vtable(this).AddedDevice)(
+                                    windows_core::Interface::as_raw(this),
+                                    &mut result__,
+                                );
+                                debug_assert!(hresult__.0 == 0);
+                                core::mem::transmute(result__)
+                            }
+                        }
+                    }
+                    impl windows_core::RuntimeType for MidiLegacyPortDeviceInformationAddedEventArgs {
+                        const SIGNATURE: windows_core::imp::ConstBuffer =
+                            windows_core::imp::ConstBuffer::for_class::<
+                                Self,
+                                IMidiLegacyPortDeviceInformationAddedEventArgs,
+                            >();
+                    }
+                    unsafe impl windows_core::Interface for MidiLegacyPortDeviceInformationAddedEventArgs {
+                        type Vtable = < IMidiLegacyPortDeviceInformationAddedEventArgs as windows_core::Interface >::Vtable ;
+                        const IID :windows_core::GUID = < IMidiLegacyPortDeviceInformationAddedEventArgs as windows_core::Interface >::IID ;
+                    }
+                    impl windows_core::RuntimeName for MidiLegacyPortDeviceInformationAddedEventArgs {
+                        const NAME : & 'static str = "Windows.Devices.Midi2.Enumeration.Legacy.MidiLegacyPortDeviceInformationAddedEventArgs" ;
+                    }
+                    unsafe impl Send for MidiLegacyPortDeviceInformationAddedEventArgs {}
+                    unsafe impl Sync for MidiLegacyPortDeviceInformationAddedEventArgs {}
+                    #[repr(transparent)]
+                    #[derive(Clone, Debug, Eq, PartialEq)]
+                    pub struct MidiLegacyPortDeviceInformationRemovedEventArgs(
+                        windows_core::IUnknown,
+                    );
+                    windows_core::imp::interface_hierarchy!(
+                        MidiLegacyPortDeviceInformationRemovedEventArgs,
+                        windows_core::IUnknown,
+                        windows_core::IInspectable
+                    );
+                    impl MidiLegacyPortDeviceInformationRemovedEventArgs {
+                        pub fn RemovedDevice(&self) -> Option<MidiLegacyPortDeviceInformation> {
+                            let this = self;
+                            unsafe {
+                                let mut result__ = core::mem::zeroed();
+                                let hresult__ = (windows_core::Interface::vtable(this)
+                                    .RemovedDevice)(
+                                    windows_core::Interface::as_raw(this),
+                                    &mut result__,
+                                );
+                                debug_assert!(hresult__.0 == 0);
+                                core::mem::transmute(result__)
+                            }
+                        }
+                    }
+                    impl windows_core::RuntimeType for MidiLegacyPortDeviceInformationRemovedEventArgs {
+                        const SIGNATURE: windows_core::imp::ConstBuffer =
+                            windows_core::imp::ConstBuffer::for_class::<
+                                Self,
+                                IMidiLegacyPortDeviceInformationRemovedEventArgs,
+                            >();
+                    }
+                    unsafe impl windows_core::Interface for MidiLegacyPortDeviceInformationRemovedEventArgs {
+                        type Vtable = < IMidiLegacyPortDeviceInformationRemovedEventArgs as windows_core::Interface >::Vtable ;
+                        const IID :windows_core::GUID = < IMidiLegacyPortDeviceInformationRemovedEventArgs as windows_core::Interface >::IID ;
+                    }
+                    impl windows_core::RuntimeName for MidiLegacyPortDeviceInformationRemovedEventArgs {
+                        const NAME : & 'static str = "Windows.Devices.Midi2.Enumeration.Legacy.MidiLegacyPortDeviceInformationRemovedEventArgs" ;
+                    }
+                    unsafe impl Send for MidiLegacyPortDeviceInformationRemovedEventArgs {}
+                    unsafe impl Sync for MidiLegacyPortDeviceInformationRemovedEventArgs {}
+                    #[repr(transparent)]
+                    #[derive(Clone, Debug, Eq, PartialEq)]
                     pub struct MidiLegacyPortDeviceWatcher(windows_core::IUnknown);
                     windows_core::imp::interface_hierarchy!(
                         MidiLegacyPortDeviceWatcher,
@@ -3247,6 +3376,26 @@ pub mod Windows {
                                 core::mem::transmute(result__)
                             }
                         }
+                        pub fn Added<P0>(&self, handler: P0) -> windows_core::Result<i64>
+                        where
+                            P0: windows_core::Param<
+                                super::super::super::super::Foundation::TypedEventHandler<
+                                    MidiLegacyPortDeviceWatcher,
+                                    MidiLegacyPortDeviceInformationAddedEventArgs,
+                                >,
+                            >,
+                        {
+                            let this = self;
+                            unsafe {
+                                let mut result__ = core::mem::zeroed();
+                                (windows_core::Interface::vtable(this).Added)(
+                                    windows_core::Interface::as_raw(this),
+                                    handler.param().abi(),
+                                    &mut result__,
+                                )
+                                .map(|| result__)
+                            }
+                        }
                         pub fn RemoveAdded(&self, token: i64) -> windows_core::Result<()> {
                             let this = self;
                             unsafe {
@@ -3265,6 +3414,26 @@ pub mod Windows {
                                     token,
                                 )
                                 .ok()
+                            }
+                        }
+                        pub fn Removed<P0>(&self, handler: P0) -> windows_core::Result<i64>
+                        where
+                            P0: windows_core::Param<
+                                super::super::super::super::Foundation::TypedEventHandler<
+                                    MidiLegacyPortDeviceWatcher,
+                                    MidiLegacyPortDeviceInformationRemovedEventArgs,
+                                >,
+                            >,
+                        {
+                            let this = self;
+                            unsafe {
+                                let mut result__ = core::mem::zeroed();
+                                (windows_core::Interface::vtable(this).Removed)(
+                                    windows_core::Interface::as_raw(this),
+                                    handler.param().abi(),
+                                    &mut result__,
+                                )
+                                .map(|| result__)
                             }
                         }
                         pub fn RemoveRemoved(&self, token: i64) -> windows_core::Result<()> {

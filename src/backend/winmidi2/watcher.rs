@@ -91,7 +91,7 @@ fn start() -> Option<RunningWatcher> {
 }
 
 /// The running watcher, started first if needed. `None` means use a full enumeration.
-fn current() -> Option<MidiLegacyPortDeviceWatcher> {
+pub(super) fn current() -> Option<MidiLegacyPortDeviceWatcher> {
     let mut state = STATE.lock().unwrap_or_else(|e| e.into_inner());
     match &*state {
         State::Running(running) if !running.stopped.load(Ordering::Acquire) => {

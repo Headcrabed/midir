@@ -29,6 +29,9 @@ const TYPES: &[&str] = &[
     "Windows.Devices.Midi2.MidiGroup",
     "Windows.Devices.Midi2.Enumeration.Midi1PortFlow",
     "Windows.Devices.Midi2.Enumeration.Legacy.MidiLegacyPortDeviceInformation",
+    // The event args types make windows-bindgen write the watcher's Added and Removed events.
+    "Windows.Devices.Midi2.Enumeration.Legacy.MidiLegacyPortDeviceInformationAddedEventArgs",
+    "Windows.Devices.Midi2.Enumeration.Legacy.MidiLegacyPortDeviceInformationRemovedEventArgs",
     "Windows.Devices.Midi2.Enumeration.Legacy.MidiLegacyPortDeviceWatcher",
     // Used by the backend's tests to create a loopback endpoint pair.
     "Windows.Devices.Midi2.Transports.Loopback.MidiLoopbackManager",

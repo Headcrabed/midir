@@ -271,3 +271,90 @@ fn tick_conversion() {
     };
     assert_eq!(ticks.to_microseconds(3), 1);
 }
+
+/// The port watcher reports ports that appear and disappear while it runs.
+#[test]
+fn port_watcher_reports_loopback_ports() {
+    let _turn = service_test_lock();
+    if !can_run("port_watcher_reports_loopback_ports") {
+        return;
+    }
+
+    let (sender, receiver) = mpsc::channel::<crate::PortEvent>();
+    let watcher = crate::PortWatcher::new(
+        "midir winmidi2 test",
+        move |event, sender: &mut mpsc::Sender<crate::PortEvent>| {
+            let _ = sender.send(event);
+        },
+        sender,
+    )
+    .expect("port watcher");
+
+    let loopback = match Loopback::create() {
+        Ok(loopback) => loopback,
+        Err(e) if !service_required() => {
+            eprintln!("port_watcher_reports_loopback_ports: skipped, {e}");
+            return;
+        }
+        Err(e) => panic!("{e}"),
+    };
+
+    let out_id = wait_for_group_0_port(&loopback.endpoint_a, Midi1PortFlow::MidiMessageDestination)
+        .expect("output port for loopback endpoint A");
+    let in_id = wait_for_group_0_port(&loopback.endpoint_b, Midi1PortFlow::MidiMessageSource)
+        .expect("input port for loopback endpoint B");
+    let out_key = out_id.to_string_lossy().to_lowercase();
+    let in_key = in_id.to_string_lossy().to_lowercase();
+
+    let mut input_added = false;
+    let mut output_added = false;
+    let deadline = Instant::now() + Duration::from_secs(15);
+    while (!input_added || !output_added) && Instant::now() < deadline {
+        let event = match receiver.recv_timeout(Duration::from_millis(200)) {
+            Ok(event) => event,
+            Err(_) => continue,
+        };
+        match event {
+            crate::PortEvent::InputAdded(port) if port.id().to_lowercase() == in_key => {
+                input_added = true;
+            }
+            crate::PortEvent::OutputAdded(port) if port.id().to_lowercase() == out_key => {
+                output_added = true;
+            }
+            _ => {}
+        }
+    }
+    assert!(input_added, "no added event for the loopback input port");
+    assert!(output_added, "no added event for the loopback output port");
+
+    drop(loopback);
+
+    let mut input_removed = false;
+    let mut output_removed = false;
+    let deadline = Instant::now() + Duration::from_secs(15);
+    while (!input_removed || !output_removed) && Instant::now() < deadline {
+        let event = match receiver.recv_timeout(Duration::from_millis(200)) {
+            Ok(event) => event,
+            Err(_) => continue,
+        };
+        match event {
+            crate::PortEvent::InputRemoved(port) if port.id().to_lowercase() == in_key => {
+                input_removed = true;
+            }
+            crate::PortEvent::OutputRemoved(port) if port.id().to_lowercase() == out_key => {
+                output_removed = true;
+            }
+            _ => {}
+        }
+    }
+    assert!(
+        input_removed,
+        "no removed event for the loopback input port"
+    );
+    assert!(
+        output_removed,
+        "no removed event for the loopback output port"
+    );
+
+    let _sender = watcher.stop();
+}

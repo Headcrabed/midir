@@ -17,10 +17,13 @@
     clippy::all
 )]
 mod bindings;
+mod hotplug;
 #[cfg(test)]
 mod tests;
 mod ump;
 mod watcher;
+
+pub use self::hotplug::PortWatcher;
 
 use std::collections::HashMap;
 use std::panic::{catch_unwind, AssertUnwindSafe};
@@ -307,7 +310,7 @@ fn port_name(port_device_id: &HSTRING, flow: Midi1PortFlow) -> Result<String, Po
 // Input
 // ---------------------------------------------------------------------------------------------
 
-#[derive(Clone, PartialEq)]
+#[derive(Clone, PartialEq, Debug)]
 pub struct MidiInputPort {
     port_device_id: HSTRING,
     endpoint_device_id: HSTRING,
@@ -531,7 +534,7 @@ impl<T> MidiInputConnection<T> {
 // Output
 // ---------------------------------------------------------------------------------------------
 
-#[derive(Clone, PartialEq)]
+#[derive(Clone, PartialEq, Debug)]
 pub struct MidiOutputPort {
     port_device_id: HSTRING,
     endpoint_device_id: HSTRING,
